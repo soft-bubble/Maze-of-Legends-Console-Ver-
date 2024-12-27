@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "Maze of Legends": {
+      "commandName": "Project"
+    },
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": ""
+    }
+  }
+}
