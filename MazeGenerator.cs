@@ -12,7 +12,11 @@ namespace Maze_of_Legends
     {
         public int Size = 15;
 
+        public (int x, int y) demaciaPosition;
+        public (int x, int y) noxusPosition;
+
         public List<SquareClass> Squares = new List<SquareClass>();
+        public List<(int x, int y)> Positions = new List<(int x, int y)>();
 
         private Random random = new Random();
 
@@ -23,11 +27,24 @@ namespace Maze_of_Legends
             ChangeType();
         }
 
+        public (int x, int y) getDemaciaPosition()
+        {
+            return (demaciaPosition);
+        }
+        public (int x, int y) getNoxusPosition()
+        {
+            return (noxusPosition);
+        }
+
         private void SquaresGeneration()
         {
             for (int i = 0; i < Size * Size; i++) //creamos 225 cuadrados 
             {
-                Squares.Add(new SquareClass(i));
+                int x = i / Size;
+                int y = i % Size;
+                Squares.Add(new SquareClass(i, x, y));
+
+                Positions.Add((x, y));
             }
         }
         
@@ -88,6 +105,18 @@ namespace Maze_of_Legends
                 pathCells[randomIndex].Type = SquareClass.CellType.Obstacle;
                 pathCells.RemoveAt(randomIndex);
             }
+
+           
+            int randomIndexD = random.Next(pathCells.Count);
+            pathCells[randomIndexD].Type = SquareClass.CellType.DemaciaPlayer;
+            demaciaPosition = pathCells[randomIndexD].Position;
+            pathCells.RemoveAt(randomIndexD);
+
+            int randomIndexN = random.Next(pathCells.Count);
+            pathCells[randomIndexN].Type = SquareClass.CellType.NoxusPlayer;
+            noxusPosition = pathCells[randomIndexN].Position;
+            pathCells.RemoveAt(randomIndexN);
+            
         }
 
         public void PrintMaze() //imprimir el coso
@@ -115,15 +144,20 @@ namespace Maze_of_Legends
                             Console.Write(Emoji.Known.CrossMarkButton); 
                             break;
                         case SquareClass.CellType.DemaciaPlayer:
-                            Console.Write(Emoji.Known.Star);
+                            Console.Write(Emoji.Known.HighVoltage);
                             break;
                         case SquareClass.CellType.NoxusPlayer:
                             Console.Write(Emoji.Known.MoneyBag);
                             break;
                     }
                 }
-                Console.WriteLine();    //nuueva línea al final de cada fila
+                Console.WriteLine();    //nueva línea al final de cada fila
             }
+        }
+
+        public void UpdateMaze()
+        {
+
         }
     }
 }

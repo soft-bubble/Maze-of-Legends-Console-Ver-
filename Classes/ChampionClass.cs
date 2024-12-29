@@ -9,16 +9,18 @@ namespace Maze_of_Legends.Classes
 {
     internal class ChampionClass
     {
+        public string name { get; set; }
         public string mainSkill { get; set; }
         public bool mainSkillAvailable { get; set; }
         public bool secondarySkillAvailable { get; set; }
         public int speed { get; set; }
         public bool skillCurse { get; set; }
         public bool trapCurse { get; set; }
-        public int positionIndex { get; set; }
+        public (int x, int y) positionIndex { get; set; }
 
-        public ChampionClass(string mainSkill, int positionIndex)
+        public ChampionClass(string name, string mainSkill, (int x, int y) positionIndex)
         {
+            this.name = name;
             this.mainSkill = mainSkill;
             this.mainSkillAvailable = true;
             this.secondarySkillAvailable = true;
@@ -26,6 +28,18 @@ namespace Maze_of_Legends.Classes
             this.skillCurse = false;
             this.trapCurse = false;
             this.positionIndex = positionIndex;
+        }
+
+        public override string ToString()
+        {
+            return $"Name: {name}\n" +
+                   $"Main Skill: {mainSkill}\n" +
+                   $"Main Skill Available: {mainSkillAvailable}\n" +
+                   $"Secondary Skill Available: {secondarySkillAvailable}\n" +
+                   $"Speed: {speed}\n" +
+                   $"Skill Curse:{skillCurse}\n" +
+                   $"Trap Curse: {trapCurse}\n" +
+                   $"Position: {positionIndex}";
         }
     }
 }

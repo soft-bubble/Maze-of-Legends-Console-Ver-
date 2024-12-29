@@ -10,14 +10,16 @@ namespace Maze_of_Legends.Classes
     internal class SquareClass
     {
         public int Id {  get; set; }
+        public (int x, int y) Position { get; set; }
         public CellType Type {  get; set; }
         public bool OnUse {  get; set; }
  
-        public SquareClass(int i)
+        public SquareClass(int i, int x, int y)
         {
             Id = i;
             Type = CellType.Wall;
             OnUse = false;
+            Position = (x,y);
         }
 
         public enum CellType

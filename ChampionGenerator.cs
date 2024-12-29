@@ -4,35 +4,31 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Maze_of_Legends.Classes;
+using Spectre.Console;
 
 namespace Maze_of_Legends
 {
     internal class ChampionGenerator
     {
-        public ChampionGenerator(string champion) 
+        string name;
+        (int x, int y) position;
+        ChampionClass champion;
+
+        public ChampionGenerator(string name, (int x, int y) position) 
         {
-            
+           this.name = name;
+           this.position = position;
+
         }
 
-        static ChampionClass Garen = new ChampionClass("ja", 1);
-        static ChampionClass Lux = new ChampionClass("ja", 1);
-        static ChampionClass Sona = new ChampionClass("ja", 1);
-        static ChampionClass Vayne = new ChampionClass("ja", 1);
-        static ChampionClass Shyvanna = new ChampionClass("ja", 1);
-
-        static ChampionClass Ambessa = new ChampionClass("ja", 1);
-        static ChampionClass Swain = new ChampionClass("ja", 1);
-        static ChampionClass Mordekaiser = new ChampionClass("ja", 1);
-        static ChampionClass Katarina = new ChampionClass("ja", 1);
-        static ChampionClass Samira = new ChampionClass("ja", 1);
-
-        public List<ChampionClass> DemaciaChamps = new List<ChampionClass>
+        public void SelectGeneratedChampion()
         {
-            Garen,
-            Lux,
-            Sona,
-            Vayne,
-            Shyvanna
-        };
+                champion = new ChampionClass(name, "Habilidad", position);
+        }
+
+        public string DisplayStatus()
+        {
+            return champion.ToString();
+        }
     }
 }
