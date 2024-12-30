@@ -41,5 +41,7 @@ namespace Maze_of_Legends.Classes
                    $"Trap Curse: {trapCurse}\n" +
                    $"Position: {positionIndex}";
         }
+
+        
     }
 }

@@ -14,12 +14,12 @@ namespace Maze_of_Legends.Classes
         public CellType Type {  get; set; }
         public bool OnUse {  get; set; }
  
-        public SquareClass(int i, int x, int y)
+        public SquareClass(int i, (int x, int y) position)
         {
             Id = i;
             Type = CellType.Wall;
             OnUse = false;
-            Position = (x,y);
+            Position = position;
         }
 
         public enum CellType

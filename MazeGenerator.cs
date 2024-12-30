@@ -40,9 +40,10 @@ namespace Maze_of_Legends
         {
             for (int i = 0; i < Size * Size; i++) //creamos 225 cuadrados 
             {
-                int x = i / Size;
-                int y = i % Size;
-                Squares.Add(new SquareClass(i, x, y));
+                int x = i % Size;
+                int y = i / Size;
+
+                Squares.Add(new SquareClass(i, (x, y)));
 
                 Positions.Add((x, y));
             }
@@ -67,11 +68,11 @@ namespace Maze_of_Legends
 
                 if (newDirectionX > 0 && newDirectionY > 0 && newDirectionX < Size && newDirectionY < Size)
                 {
-                    int index = newDirectionX * Size + newDirectionY;
+                    int index = newDirectionX + newDirectionY * Size;
                     if (Squares[index].Type == SquareClass.CellType.Wall)
                     {
                         Squares[index].Type = SquareClass.CellType.Path;
-                        int betweenIndex = (x + directionX / 2) * Size + (y + directionY / 2);
+                        int betweenIndex = (x + directionX / 2) + (y + directionY / 2) * Size;
                         Squares[betweenIndex].Type = SquareClass.CellType.Path;
                         GenerateStructure(newDirectionX, newDirectionY);    //recursividad vv
                     }
@@ -106,7 +107,6 @@ namespace Maze_of_Legends
                 pathCells.RemoveAt(randomIndex);
             }
 
-           
             int randomIndexD = random.Next(pathCells.Count);
             pathCells[randomIndexD].Type = SquareClass.CellType.DemaciaPlayer;
             demaciaPosition = pathCells[randomIndexD].Position;
@@ -155,9 +155,84 @@ namespace Maze_of_Legends
             }
         }
 
-        public void UpdateMaze()
+        public void MoveDemaciaChampion(ConsoleKey key) //mover campeón de demacia
         {
+            (int x, int y) currentPosition = getDemaciaPosition();
+            int newX = currentPosition.x;
+            int newY = currentPosition.y;
 
+            switch (key)
+            {
+                case ConsoleKey.UpArrow:
+                    newY -= 1;
+                    break;
+                case ConsoleKey.DownArrow:
+                    newY += 1;
+                    break;
+                case ConsoleKey.LeftArrow:
+                    newX -= 1;
+                    break;
+                case ConsoleKey.RightArrow:
+                    newX += 1;
+                    break;
+            }
+
+            if (newX >= 0 && newY >= 0 && newX < Size && newY < Size)
+            {
+                int index = newX + newY * Size;
+                if (Squares[index].Type == SquareClass.CellType.Path)
+                {
+                    Squares[currentPosition.x + currentPosition.y * Size].Type = SquareClass.CellType.Path;
+                    Squares[index].Type = SquareClass.CellType.DemaciaPlayer;
+                    demaciaPosition = (newX, newY);
+                }
+                else if (Squares[index].Type == SquareClass.CellType.Trap)
+                {
+                    Squares[currentPosition.x + currentPosition.y * Size].Type = SquareClass.CellType.Path;
+                    Squares[index].Type = SquareClass.CellType.DemaciaPlayer;
+                    demaciaPosition = (newX, newY);
+                }
+            }
+        }
+
+        public void MoveNoxusChampion(ConsoleKey key) //mover campeón de demacia
+        {
+            (int x, int y) currentPosition = getNoxusPosition();
+            int newX = currentPosition.x;
+            int newY = currentPosition.y;
+
+            switch (key)
+            {
+                case ConsoleKey.UpArrow:
+                    newY -= 1;
+                    break;
+                case ConsoleKey.DownArrow:
+                    newY += 1;
+                    break;
+                case ConsoleKey.LeftArrow:
+                    newX -= 1;
+                    break;
+                case ConsoleKey.RightArrow:
+                    newX += 1;
+                    break;
+            }
+
+            if (newX >= 0 && newY >= 0 && newX < Size && newY < Size)
+            {
+                int index = newX + newY * Size;
+                if (Squares[index].Type == SquareClass.CellType.Path)
+                {
+                    Squares[currentPosition.x + currentPosition.y * Size].Type = SquareClass.CellType.Path;
+                    Squares[index].Type = SquareClass.CellType.NoxusPlayer;
+                    noxusPosition = (newX, newY);
+                }
+                else if (Squares[index].Type == SquareClass.CellType.Trap)
+                {
+                    Squares[currentPosition.x + currentPosition.y * Size].Type = SquareClass.CellType.Path;
+                    Squares[index].Type = SquareClass.CellType.NoxusPlayer;
+                    noxusPosition = (newX, newY);
+                }
+            }
         }
     }
 }
