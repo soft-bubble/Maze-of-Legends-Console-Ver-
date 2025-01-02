@@ -223,6 +223,14 @@ namespace Maze_of_Legends
                     isValid = true;
                     honeyFruit = true;
                 }
+                else if (Squares[index].Type == SquareClass.CellType.NoxusPlayer)
+                {
+                    Squares[currentPosition.x + currentPosition.y * Size].Type = SquareClass.CellType.NoxusPlayer;
+                    noxusPosition = (currentPosition.x, currentPosition.y);
+                    Squares[index].Type = SquareClass.CellType.DemaciaPlayer;
+                    demaciaPosition = (newX, newY);
+                    isValid = true;
+                }
                 else if (Squares[index].Type == SquareClass.CellType.Wall)
                 {
                     isValid = false;
@@ -281,6 +289,14 @@ namespace Maze_of_Legends
                     noxusPosition = (newX, newY);
                     isValid = true;
                     honeyFruit = true;
+                }
+                else if (Squares[index].Type == SquareClass.CellType.DemaciaPlayer)
+                {
+                    Squares[currentPosition.x + currentPosition.y * Size].Type = SquareClass.CellType.DemaciaPlayer;
+                    demaciaPosition = (currentPosition.x, currentPosition.y);
+                    Squares[index].Type = SquareClass.CellType.NoxusPlayer;
+                    noxusPosition = (newX, newY);
+                    isValid = true;
                 }
                 else if (Squares[index].Type == SquareClass.CellType.Wall) 
                 {
@@ -417,6 +433,73 @@ namespace Maze_of_Legends
             var pathCells = Squares.Where(square => square.Type == SquareClass.CellType.Path).ToList();
             int randomIndex = random.Next(pathCells.Count);
             pathCells[randomIndex].Type = SquareClass.CellType.HoneyFruit;
+        }
+
+        //SKILLS:
+
+        public void GenerateTrap()
+        {
+            var pathCells = Squares.Where(square => square.Type == SquareClass.CellType.Path).ToList();
+            int randomIndex = random.Next(pathCells.Count);
+            pathCells[randomIndex].Type = SquareClass.CellType.Trap;
+        }
+
+        public void GenerateObstacle()
+        {
+            var pathCells = Squares.Where(square => square.Type == SquareClass.CellType.Path).ToList();
+            int randomIndex = random.Next(pathCells.Count);
+            pathCells[randomIndex].Type = SquareClass.CellType.Obstacle;
+        }
+
+        public void TeleportEnemy(string enemy)
+        {
+            var pathCells = Squares.Where(square => square.Type == SquareClass.CellType.Path).ToList();
+            int randomIndex = random.Next(pathCells.Count);
+
+            if (enemy == "Noxus")
+            {
+                (int x, int y) currentPosition = getNoxusPosition();
+                int indexOfCurrentPosition = currentPosition.x + currentPosition.y * Size;
+
+                Squares[indexOfCurrentPosition].Type = SquareClass.CellType.Path;
+                pathCells[randomIndex].Type = SquareClass.CellType.NoxusPlayer;
+                noxusPosition = pathCells[randomIndex].Position;
+            }
+            else if (enemy == "Demacia")
+            {
+                (int x, int y) currentPosition = getDemaciaPosition();
+                int indexOfCurrentPosition = currentPosition.x + currentPosition.y * Size;
+
+                Squares[indexOfCurrentPosition].Type = SquareClass.CellType.Path;
+                pathCells[randomIndex].Type = SquareClass.CellType.DemaciaPlayer;
+                demaciaPosition = pathCells[randomIndex].Position;
+            }
+
+        }
+
+        public void TeleportSelf(string self)
+        {
+            var pathCells = Squares.Where(square => square.Type == SquareClass.CellType.Path).ToList();
+            int randomIndex = random.Next(pathCells.Count);
+
+            if (self == "Noxus")
+            {
+                (int x, int y) currentPosition = getNoxusPosition();
+                int indexOfCurrentPosition = currentPosition.x + currentPosition.y * Size;
+
+                Squares[indexOfCurrentPosition].Type = SquareClass.CellType.Path;
+                pathCells[randomIndex].Type = SquareClass.CellType.NoxusPlayer;
+                noxusPosition = pathCells[randomIndex].Position;
+            }
+            else if (self == "Demacia")
+            {
+                (int x, int y) currentPosition = getDemaciaPosition();
+                int indexOfCurrentPosition = currentPosition.x + currentPosition.y * Size;
+
+                Squares[indexOfCurrentPosition].Type = SquareClass.CellType.Path;
+                pathCells[randomIndex].Type = SquareClass.CellType.DemaciaPlayer;
+                demaciaPosition = pathCells[randomIndex].Position;
+            }
         }
     }
 }
