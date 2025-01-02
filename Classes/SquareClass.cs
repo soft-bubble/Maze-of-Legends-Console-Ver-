@@ -31,6 +31,7 @@ namespace Maze_of_Legends.Classes
             Exit = 4,
             DemaciaPlayer = 5,
             NoxusPlayer = 6,
+            HoneyFruit = 7,
         }
     }
 }

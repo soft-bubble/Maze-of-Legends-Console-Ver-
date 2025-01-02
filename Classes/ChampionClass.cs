@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
@@ -42,6 +43,20 @@ namespace Maze_of_Legends.Classes
                    $"Position: {positionIndex}";
         }
 
-        
+        public void SpeedCooldown(int i)
+        {
+            if (( i + 3) % 3 == 0)
+            {
+                speed = 3;
+            }
+            else if ((i + 3) % 3 == 1)
+            {
+                speed = 2;
+            }
+            else if((i + 3) % 3 == 2)
+            {
+                speed = 1;
+            }
+        }
     }
 }
