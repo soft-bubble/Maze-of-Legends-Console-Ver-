@@ -152,19 +152,16 @@ namespace Maze_of_Legends
                             Console.Write(Emoji.Known.BlackCircle); 
                             break;
                         case SquareClass.CellType.Trap:
-                            Console.Write(Emoji.Known.Fire); 
+                            Console.Write(Emoji.Known.Cyclone); 
                             break;
                         case SquareClass.CellType.Obstacle:
                             Console.Write(Emoji.Known.ChequeredFlag); 
                             break;
-                        case SquareClass.CellType.Exit:
-                            Console.Write(Emoji.Known.CrossMarkButton); 
-                            break;
                         case SquareClass.CellType.DemaciaPlayer:
-                            Console.Write(Emoji.Known.HighVoltage);
+                            Console.Write(Emoji.Known.Sunflower);
                             break;
                         case SquareClass.CellType.NoxusPlayer:
-                            Console.Write(Emoji.Known.MoneyBag);
+                            Console.Write(Emoji.Known.CrescentMoon);
                             break;
                         case SquareClass.CellType.HoneyFruit:
                             Console.Write(Emoji.Known.Peach);

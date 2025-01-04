@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using Spectre.Console;
 
 namespace Maze_of_Legends.Classes
 {
@@ -15,8 +16,7 @@ namespace Maze_of_Legends.Classes
         public bool mainSkillAvailable { get; set; }
         public bool secondarySkillAvailable { get; set; }
         public int speed { get; set; }
-        public bool skillCurse { get; set; }
-        public bool trapCurse { get; set; }
+        public bool Cursed { get; set; }
         public (int x, int y) positionIndex { get; set; }
 
         public ChampionClass(string name, string mainSkill, (int x, int y) positionIndex)
@@ -25,9 +25,8 @@ namespace Maze_of_Legends.Classes
             this.mainSkill = mainSkill;
             this.mainSkillAvailable = true;
             this.secondarySkillAvailable = true;
-            this.speed = 3;
-            this.skillCurse = false;
-            this.trapCurse = false;
+            this.speed = 3;    
+            this.Cursed = false;
             this.positionIndex = positionIndex;
         }
 
@@ -37,10 +36,28 @@ namespace Maze_of_Legends.Classes
                    $"Main Skill: {mainSkill}\n" +
                    $"Main Skill Available: {mainSkillAvailable}\n" +
                    $"Secondary Skill Available: {secondarySkillAvailable}\n" +
-                   $"Speed: {speed}\n" +
-                   $"Skill Curse:{skillCurse}\n" +
-                   $"Trap Curse: {trapCurse}\n" +
+                   $"Speed: {speed}\n" +  
+                   $"Cursed: {Cursed}\n" +
                    $"Position: {positionIndex}";
+        }
+
+
+        public void PrintInfo()
+        {
+            var table = new Table();
+
+            table.AddColumn("Property");
+            table.AddColumn("Value");
+
+            table.AddRow("Name", name);
+            table.AddRow("Main Skill", mainSkill);
+            table.AddRow("Main Skill Available", mainSkillAvailable.ToString());
+            table.AddRow("Secondary Skill Available", secondarySkillAvailable.ToString());
+            table.AddRow("Speed", speed.ToString());
+            table.AddRow("Cursed", Cursed.ToString());
+            table.AddRow("Position", positionIndex.ToString());
+
+            AnsiConsole.Write(table);
         }
 
         public void SpeedCooldown(int i)

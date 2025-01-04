@@ -5,6 +5,10 @@ using Maze_of_Legends.Classes;
 using System.Diagnostics.Metrics;
 using System.Transactions;
 using System.Net.Http.Headers;
+using System.Diagnostics;
+using System.IO;
+using System.Collections.Immutable;
+using static System.Net.Mime.MediaTypeNames;
 
 internal class Program
 {
@@ -25,15 +29,15 @@ internal class Program
         (int x, int y) noxusPosition;
         string demaciaChampionName = string.Empty;
         string noxusChampionName = string.Empty;
-        bool demaciaWin = false;
-        bool noxusWin = false;
+        bool demaciaWin = false;      //victoria de demacia
+        bool noxusWin = false;        //victoria de noxus
 
         while (running) {
             var firstPage = AnsiConsole.Prompt(new SelectionPrompt<string>()
             .Title("[turquoise4] Welcome to Maze of Legends![/]")
-            .PageSize(3)
+            .PageSize(4)
             .AddChoices(new[] {
-                "Start", "Credits", "Exit"
+                "Start", "Credits", "Controls", "Exit"
             }));
 
             if (firstPage == "Start") 
@@ -58,8 +62,99 @@ internal class Program
             }
             if (firstPage == "Credits")
             {
-                AnsiConsole.Markup("[cornflowerblue]Thanks to me, my family and friends, and Piad for the mind blowing game idea...[/]" + "" +
-                    "\n[maroon]Really, that free will of interface fucked me up.[/]"); 
+                var panelCr = new Panel(new Markup("[bold turquoise4]Thanks to my family[/] for supporting me throughout the whole process (I didn't get to wash many dishes) and for giving me some ideas.\n" +
+                                  "[bold turquoise4]Thanks to my friends[/] for keeping my morale up, and [bold turquoise4]thanks to myself[/] for not having yet another crisis during this project.\n" +
+                                  "[bold turquoise4]Also, thanks to you[/] for not creating yet another massacre with some Unity game idea."))
+                {
+                    Header = new PanelHeader("[bold white]Acknowledgments[/]"),
+                    Border = BoxBorder.Square
+                };
+
+                AnsiConsole.Render(panelCr);
+                Console.ReadLine();
+                running = false;
+            }
+            if (firstPage == "Controls")
+            {
+                var Up = Emoji.Known.UpArrow;
+                var Down = Emoji.Known.DownArrow;
+                var Left = Emoji.Known.LeftArrow;
+                var Right = Emoji.Known.RightArrow;
+
+                var panelCo1 = new Panel(new Markup($"[turquoise4]Move up:[/] {Up}\n" 
+                    + $"[turquoise4]Move down:[/] {Down}\n" 
+                    + $"[turquoise4]Move left:[/] {Left}\n"
+                    + $"[turquoise4]Move right:[/] {Right}\n"
+                    + "[turquoise4]Use Secondary Skill:[/] O\n"
+                    + "[turquoise4]Use Main Skill:[/] P\n"
+                    + "[turquoise4]Pass turn:[/] Enter\n"
+                    ))
+                {
+                    Header = new PanelHeader("[bold white]Game Controls[/]"),
+                    Border = BoxBorder.Square
+                };
+                AnsiConsole.Render(panelCo1);
+
+                var wall = Emoji.Known.BlueSquare;
+                var path = Emoji.Known.BlackCircle;
+                var trap = Emoji.Known.Cyclone;
+                var obstacle = Emoji.Known.ChequeredFlag;
+                var honeyFruits = Emoji.Known.Peach;
+                var demaciaPlayer = Emoji.Known.DimButton;
+                var noxusPlayer = Emoji.Known.CrescentMoon;
+
+                var panelCo5 = new Panel(new Markup($"[turquoise4]Wall:[/] {wall}\n"
+                    + $"[turquoise4]Path:[/] {path}\n"
+                    + $"[turquoise4]Trap:[/] {trap}\n"
+                    + $"[turquoise4]Obstacle:[/] {obstacle}\n"
+                    + $"[turquoise4]HoneyFruit:[/] {honeyFruits}\n"
+                    + $"[turquoise4]Demacia Champion:[/] {demaciaPlayer}\n"
+                    + $"[turquoise4]Noxus Champion:[/] {noxusPlayer}\n"
+                    ))
+                {
+                    Header = new PanelHeader("[bold white]Game Objects[/]"),
+                    Border = BoxBorder.Square
+                };
+                AnsiConsole.Render(panelCo5);
+
+                var panelCo2 = new Panel(new Markup("[turquoise4]Generate Random Trap:[/] A trap is generated randomly at some valid position.\n"
+                    + "[turquoise4]Generate Random Obstacle:[/] An obstacle is generated randomly at some valid position.\n"
+                    + "[turquoise4]Teleport Enemy To Random Address:[/] The enemy player is sent to a random valid position.\n"
+                    + "[turquoise4]Teleport Oneself To Random Address:[/] The user of the skill teleports itself to a random valid position.\n"
+                    + "[turquoise4]Root Enemy:[/] Enemy remains rooted to the current position during two turns.\n"
+                    + "[turquoise4]Steal Speed:[/] Enemy speed is set to two, user speed is set to three.\n"
+                    + "[turquoise4]Remove Obstacle (Permanent secondary skill):[/] Removes the immediate obstacle.\n"
+                     ))
+                {
+                    Header = new PanelHeader("[bold white]Skills tree:[/]"),
+                    Border = BoxBorder.Square
+                };
+                AnsiConsole.Render(panelCo2);
+
+                var panelCo3 = new Panel(new Markup("[turquoise4]Teleport Trap:[/] The victim is teleported to its initial position.\n"
+                    + "[turquoise4]Rooted Trap:[/] The victim remains rooted to the place during three turns.\n"
+                    + "[turquoise4]Lose a fruit:[/] The victim loses a fruit, which falls somewhere in the labyrinth. If the victim has no fruit, they receive a negative point to refill.\n"
+                     ))
+                {
+                    Header = new PanelHeader("[bold white]Traps:[/]"),
+                    Border = BoxBorder.Square
+                };
+                AnsiConsole.Render(panelCo3);
+
+                var panelCo4 = new Panel(new Markup("Each player starts at a random position, with the champion they chose and a random skill.\n"
+                    + "The HoneyFruit counter must be filled with three fruits for the victory condition to be met.\n"
+                    + "Each champion has a speed that goes in a rhythm of 3-2-1 steps per turn.\n"
+                    + "Each skill consumes one speed point. Skills, either main or secondary, have a three-turn cooldown, separately.\n"
+                    + "Stepping on a trap reduces the current speed to 0.\n"
+                    + "If two champions meet at the same cell, the one previously there is pushed to the currenlty moving champion's previous cell."
+                    ))
+                {
+                    Header = new PanelHeader("[bold white]Game mission and specifications:[/]"),
+                    Border = BoxBorder.Square
+                };
+                AnsiConsole.Render(panelCo4);
+
+                Console.ReadLine();
                 running = false;
             }
             if (firstPage == "Exit")
@@ -134,12 +229,31 @@ internal class Program
                     if (Turn)
                     {
                         Console.Clear();
+
+                        var panelD = new Panel(new Markup($" HoneyFruits: {HoneyFruitsD}"))
+                        {
+                            Border = BoxBorder.Square
+                        };
+                        AnsiConsole.Render(panelD);
+
+                        var tableD = new Table();
+
+                        tableD.AddColumn("Counter");
+                        tableD.AddColumn("Value");
+
+                        tableD.AddRow("Root Cooldown", RootCooldownD.ToString());
+                        tableD.AddRow($"{mainSkillD} Cooldown", mainSkillCooldownD.ToString());
+                        tableD.AddRow("Remove Wall Cooldown", secondaryCooldownD.ToString());
+
+                        AnsiConsole.Write(tableD);
+
                         Maze.PrintMaze();
+
                         Console.WriteLine();
 
                         if (RootCooldownD == 0)
                         {
-                            demaciaChampion.trapCurse = false;
+                            demaciaChampion.Cursed = false;
                         }
                         else
                         {
@@ -158,8 +272,11 @@ internal class Program
 
                         demaciaChampion.positionIndex = Maze.demaciaPosition;
 
-                        Console.WriteLine(demaciaChampion.ToString());
-                        Console.WriteLine("HoneyFruits collected: " + HoneyFruitsD);
+                        
+
+                        demaciaChampion.PrintInfo();
+
+                        
 
                         if (HoneyFruitsD == 3)
                         {
@@ -192,7 +309,7 @@ internal class Program
                                             RootCooldownD = 3;
                                             demaciaChampion.speed = 0;
                                             Maze.trap = false;
-                                            demaciaChampion.trapCurse = true;
+                                            demaciaChampion.Cursed = true;
                                         }
                                         else if (traps[randomIndex] == 2)
                                         {
@@ -228,7 +345,7 @@ internal class Program
                                             RootCooldownD = 3;
                                             demaciaChampion.speed = 0;
                                             Maze.trap = false;
-                                            demaciaChampion.trapCurse = true;
+                                            demaciaChampion.Cursed = true;
                                         }
                                         else if (traps[randomIndex] == 2)
                                         {
@@ -264,7 +381,7 @@ internal class Program
                                             RootCooldownD = 3;
                                             demaciaChampion.speed = 0;
                                             Maze.trap = false;
-                                            demaciaChampion.trapCurse = true;
+                                            demaciaChampion.Cursed = true;
                                         }
                                         else if (traps[randomIndex] == 2)
                                         {
@@ -300,7 +417,7 @@ internal class Program
                                             RootCooldownD = 3;
                                             demaciaChampion.speed = 0;
                                             Maze.trap = false;
-                                            demaciaChampion.trapCurse = true;
+                                            demaciaChampion.Cursed = true;
                                         }
                                         else if (traps[randomIndex] == 2)
                                         {
@@ -379,12 +496,30 @@ internal class Program
                     else if (!Turn)
                     {
                         Console.Clear();
+
+                        var panelN = new Panel(new Markup($" HoneyFruits: {HoneyFruitsN}"))
+                        {
+                            Border = BoxBorder.Square
+                        };
+                        AnsiConsole.Render(panelN);
+
+                        var tableN = new Table();
+
+                        tableN.AddColumn("Counter");
+                        tableN.AddColumn("Value");
+
+                        tableN.AddRow("Root Cooldown", RootCooldownN.ToString());
+                        tableN.AddRow($"{mainSkillN} Cooldown", mainSkillCooldownN.ToString());
+                        tableN.AddRow("Remove Wall Cooldown", secondaryCooldownN.ToString());
+
+                        AnsiConsole.Write(tableN);
+
                         Maze.PrintMaze();
                         Console.WriteLine();
 
                         if (RootCooldownN == 0)
                         {
-                            noxusChampion.trapCurse = false;
+                            noxusChampion.Cursed = false;
                         }
                         else
                         {
@@ -403,8 +538,11 @@ internal class Program
 
                         noxusChampion.positionIndex = Maze.noxusPosition;
 
-                        Console.WriteLine(noxusChampion.ToString());
-                        Console.WriteLine("HoneyFruits collected: " + HoneyFruitsN);
+                        
+
+                        noxusChampion.PrintInfo();
+
+                        
 
                         if (HoneyFruitsN == 3)
                         {
@@ -437,7 +575,7 @@ internal class Program
                                             RootCooldownN = 3;
                                             noxusChampion.speed = 0;
                                             Maze.trap = false;
-                                            noxusChampion.trapCurse = true;
+                                            noxusChampion.Cursed = true;
                                         }
                                         else if (traps[randomIndex] == 2)
                                         {
@@ -473,7 +611,7 @@ internal class Program
                                             RootCooldownN = 3;
                                             noxusChampion.speed = 0;
                                             Maze.trap = false;
-                                            noxusChampion.trapCurse = true;
+                                            noxusChampion.Cursed = true;
                                         }
                                         else if (traps[randomIndex] == 2)
                                         {
@@ -509,7 +647,7 @@ internal class Program
                                             RootCooldownN = 3;
                                             noxusChampion.speed = 0;
                                             Maze.trap = false;
-                                            noxusChampion.trapCurse = true;
+                                            noxusChampion.Cursed = true;
                                         }
                                         else if (traps[randomIndex] == 2)
                                         {
@@ -545,7 +683,7 @@ internal class Program
                                             RootCooldownN = 3;
                                             noxusChampion.speed = 0;
                                             Maze.trap = false;
-                                            noxusChampion.trapCurse = true;
+                                            noxusChampion.Cursed = true;
                                         }
                                         else if (traps[randomIndex] == 2)
                                         {
@@ -628,11 +766,31 @@ internal class Program
 
         if (demaciaWin)
         {
-            Console.WriteLine("Demacia won.");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(@"
+    ┌───────────────────────────────┐
+    │                               │
+    │     ╔═══════════════╗         │
+    │     ║ DEMACIA WINS! ║         │
+    │     ╚═══════════════╝         │
+    │                               │
+    └───────────────────────────────┘
+    ");
+            Console.ResetColor();
         }
         else if (noxusWin)
         {
-            Console.WriteLine("Noxus won.");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(@"
+    ┌───────────────────────────────┐
+    │                               │
+    │     ╔═══════════════╗         │
+    │     ║ NOXUS WINS!   ║         │
+    │     ╚═══════════════╝         │
+    │                               │
+    └───────────────────────────────┘
+    ");
+            Console.ResetColor();
         }
     }
 }
