@@ -122,7 +122,7 @@ internal class Program
                     + "[turquoise4]Teleport Enemy To Random Address:[/] The enemy player is sent to a random valid position.\n"
                     + "[turquoise4]Teleport Oneself To Random Address:[/] The user of the skill teleports itself to a random valid position.\n"
                     + "[turquoise4]Root Enemy:[/] Enemy remains rooted to the current position during two turns.\n"
-                    + "[turquoise4]Steal Speed:[/] Enemy speed is set to two, user speed is set to three.\n"
+                    + "[turquoise4]Steal Speed:[/] Enemy speed is set to one, user speed is set to three for the next turn.\n"
                     + "[turquoise4]Remove Obstacle (Permanent secondary skill):[/] Removes the immediate obstacle.\n"
                      ))
                 {
@@ -468,7 +468,7 @@ internal class Program
                                                 RootCooldownN = 2;
                                                 break;
                                             case "Steal Speed":
-                                                speedSN = 1;
+                                                speedSN = 2;
                                                 noxusChampion.SpeedCooldown(speedSN);
                                                 speedSD = 2;
                                                 break;
@@ -734,7 +734,7 @@ internal class Program
                                                 RootCooldownD = 2;
                                                 break;
                                             case "Steal Speed":
-                                                speedSD = 1;
+                                                speedSD = 2;
                                                 demaciaChampion.SpeedCooldown(speedSD);
                                                 speedSN = 2;
                                                 break;

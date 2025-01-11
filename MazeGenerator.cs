@@ -158,7 +158,7 @@ namespace Maze_of_Legends
                             Console.Write(Emoji.Known.ChequeredFlag); 
                             break;
                         case SquareClass.CellType.DemaciaPlayer:
-                            Console.Write(Emoji.Known.Sunflower);
+                            Console.Write(Emoji.Known.DimButton);
                             break;
                         case SquareClass.CellType.NoxusPlayer:
                             Console.Write(Emoji.Known.CrescentMoon);
