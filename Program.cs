@@ -219,7 +219,7 @@ internal class Program
                 int HoneyFruitsD = 0;
                 int HoneyFruitsN = 0;
 
-                List<int> traps = new List<int>() { 0, 1, 2 };
+                List<int> traps = new List<int>() { 0, 1, 2, 3 };
                 
                 gameReallyRunning = true;
                 
@@ -318,6 +318,15 @@ internal class Program
                                             HoneyFruitsD--;
                                             Maze.GenerateHoneyFruits();
                                         }
+                                        else if ((traps[randomIndex] == 3))
+                                        {
+                                            demaciaChampion.speed = 0;
+                                            Maze.trap = false;
+                                            demaciaChampion.mainSkillAvailable = false;
+                                            mainSkillCooldownD = 2;
+                                            demaciaChampion.secondarySkillAvailable = false;
+                                            secondaryCooldownD = 2;
+                                        }
                                     }
                                     if (Maze.honeyFruit)
                                     {
@@ -353,6 +362,15 @@ internal class Program
                                             Maze.trap = false;
                                             HoneyFruitsD--;
                                             Maze.GenerateHoneyFruits();
+                                        }
+                                        else if ((traps[randomIndex] == 3))
+                                        {
+                                            demaciaChampion.speed = 0;
+                                            Maze.trap = false;
+                                            demaciaChampion.mainSkillAvailable = false;
+                                            mainSkillCooldownD = 2;
+                                            demaciaChampion.secondarySkillAvailable = false;
+                                            secondaryCooldownD = 2;
                                         }
                                     }
                                     if (Maze.honeyFruit)
@@ -390,6 +408,15 @@ internal class Program
                                             HoneyFruitsD--;
                                             Maze.GenerateHoneyFruits();
                                         }
+                                        else if ((traps[randomIndex] == 3))
+                                        {
+                                            demaciaChampion.speed = 0;
+                                            Maze.trap = false;
+                                            demaciaChampion.mainSkillAvailable = false;
+                                            mainSkillCooldownD = 2;
+                                            demaciaChampion.secondarySkillAvailable = false;
+                                            secondaryCooldownD = 2;
+                                        }
                                     }
                                     if (Maze.honeyFruit)
                                     {
@@ -425,6 +452,15 @@ internal class Program
                                             Maze.trap = false;
                                             HoneyFruitsD--;
                                             Maze.GenerateHoneyFruits();
+                                        }
+                                        else if ((traps[randomIndex] == 3))
+                                        {
+                                            demaciaChampion.speed = 0;
+                                            Maze.trap = false;
+                                            demaciaChampion.mainSkillAvailable = false;
+                                            mainSkillCooldownD = 2;
+                                            demaciaChampion.secondarySkillAvailable = false;
+                                            secondaryCooldownD = 2;
                                         }
                                     }
                                     if (Maze.honeyFruit)
@@ -584,6 +620,15 @@ internal class Program
                                             HoneyFruitsN--;
                                             Maze.GenerateHoneyFruits();
                                         }
+                                        else if ((traps[randomIndex] == 3))
+                                        {
+                                            noxusChampion.speed = 0;
+                                            Maze.trap = false;
+                                            noxusChampion.mainSkillAvailable = false;
+                                            mainSkillCooldownN = 2;
+                                            noxusChampion.secondarySkillAvailable = false;
+                                            secondaryCooldownN = 2;
+                                        }
                                     }
                                     if (Maze.honeyFruit)
                                     {
@@ -619,6 +664,15 @@ internal class Program
                                             Maze.trap = false;
                                             HoneyFruitsN--;
                                             Maze.GenerateHoneyFruits();
+                                        }
+                                        else if ((traps[randomIndex] == 3))
+                                        {
+                                            noxusChampion.speed = 0;
+                                            Maze.trap = false;
+                                            noxusChampion.mainSkillAvailable = false;
+                                            mainSkillCooldownN = 2;
+                                            noxusChampion.secondarySkillAvailable = false;
+                                            secondaryCooldownN = 2;
                                         }
                                     }
                                     if (Maze.honeyFruit)
@@ -656,6 +710,15 @@ internal class Program
                                             HoneyFruitsN--;
                                             Maze.GenerateHoneyFruits();
                                         }
+                                        else if ((traps[randomIndex] == 3))
+                                        {
+                                            noxusChampion.speed = 0;
+                                            Maze.trap = false;
+                                            noxusChampion.mainSkillAvailable = false;
+                                            mainSkillCooldownN = 2;
+                                            noxusChampion.secondarySkillAvailable = false;
+                                            secondaryCooldownN = 2;
+                                        }
                                     }
                                     if (Maze.honeyFruit)
                                     {
@@ -691,6 +754,15 @@ internal class Program
                                             Maze.trap = false;
                                             HoneyFruitsN--;
                                             Maze.GenerateHoneyFruits();
+                                        }
+                                        else if ((traps[randomIndex] == 3))
+                                        {
+                                            noxusChampion.speed = 0;
+                                            Maze.trap = false;
+                                            noxusChampion.mainSkillAvailable = false;
+                                            mainSkillCooldownN = 2;
+                                            noxusChampion.secondarySkillAvailable = false;
+                                            secondaryCooldownN = 2;
                                         }
                                     }
                                     if (Maze.honeyFruit)

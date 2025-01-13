@@ -101,7 +101,7 @@ namespace Maze_of_Legends
         {
             var pathCells = Squares.Where(square => square.Type == SquareClass.CellType.Path).ToList();
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 4; i++)
             {
                 int randomIndex = random.Next(pathCells.Count);
                 pathCells[randomIndex].Type = SquareClass.CellType.Trap;
