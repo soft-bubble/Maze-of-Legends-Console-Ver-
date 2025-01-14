@@ -12,9 +12,9 @@ using static System.Net.Mime.MediaTypeNames;
 
 internal class Program
 {
-    public static MazeGenerator Maze = new MazeGenerator();
+    public static MazeGenerator Maze = new MazeGenerator(); //iniciar el laberinto
     #pragma warning disable //para no obtener la alerta de que gameChampions null
-    public static ChampionClass demaciaChampion;
+    public static ChampionClass demaciaChampion; //iniciar los campeones sin valores
     public static ChampionClass noxusChampion;
 
     public static Random random = new Random();
@@ -25,42 +25,42 @@ internal class Program
         bool gameRunning = false;       //para elegir campeones
         bool gameReallyRunning = false; //para jugar
         bool Turn = true;               //para cambiar de turno
-        (int x, int y) demaciaPosition;
+        (int x, int y) demaciaPosition; //posición de cada campeón
         (int x, int y) noxusPosition;
-        string demaciaChampionName = string.Empty;
+        string demaciaChampionName = string.Empty;  //nombre a seleccionar de cada campeón
         string noxusChampionName = string.Empty;
         bool demaciaWin = false;      //victoria de demacia
         bool noxusWin = false;        //victoria de noxus
 
         while (running) {
-            var firstPage = AnsiConsole.Prompt(new SelectionPrompt<string>()
+            var firstPage = AnsiConsole.Prompt(new SelectionPrompt<string>()  //primera página a mostrar
             .Title("[turquoise4] Welcome to Maze of Legends![/]")
             .PageSize(4)
             .AddChoices(new[] {
                 "Start", "Credits", "Controls", "Exit"
-            }));
+            })); 
 
             if (firstPage == "Start") 
             {
-                demaciaChampionName = AnsiConsole.Prompt(new SelectionPrompt<string>()
+                demaciaChampionName = AnsiConsole.Prompt(new SelectionPrompt<string>() //primer jugador elige personaje
                 .Title("[turquoise4] Select your Demacia Champion:[/]")
                 .PageSize(5)
                 .AddChoices(new[] {
                 "Garen", "Lux", "Sona", "Vayne", "Shyvanna"
                 }));
 
-                noxusChampionName = AnsiConsole.Prompt(new SelectionPrompt<string>()
+                noxusChampionName = AnsiConsole.Prompt(new SelectionPrompt<string>() //segundo jugador elige personaje
                 .Title("[turquoise4] Select your Noxus Champion:[/]")
                 .PageSize(5)
                 .AddChoices(new[] {
                 "Ambessa", "Swain", "Mordekaiser", "Katarina", "Samira"
                 }));
 
-                gameRunning = true;
+                gameRunning = true; //el juego inicia 
 
                 
             }
-            if (firstPage == "Credits")
+            if (firstPage == "Credits") //página de los créditos
             {
                 var panelCr = new Panel(new Markup("[bold turquoise4]Thanks to my family[/] for supporting me throughout the whole process (I didn't get to wash many dishes) and for giving me some ideas.\n" +
                                   "[bold turquoise4]Thanks to my friends[/] for keeping my morale up, and [bold turquoise4]thanks to myself[/] for not having yet another crisis during this project.\n" +
@@ -72,11 +72,12 @@ internal class Program
 
                 AnsiConsole.Render(panelCr);
                 Console.ReadLine();
-                running = false;
+                running = false; //se termina la ejecución del while
             }
-            if (firstPage == "Controls")
+            if (firstPage == "Controls") //explicación de controles, objetivos y visual 
             {
-                var Up = Emoji.Known.UpArrow;
+                //Visual de las teclas con emojis:
+                var Up = Emoji.Known.UpArrow; 
                 var Down = Emoji.Known.DownArrow;
                 var Left = Emoji.Known.LeftArrow;
                 var Right = Emoji.Known.RightArrow;
@@ -93,9 +94,10 @@ internal class Program
                     Header = new PanelHeader("[bold white]Game Controls[/]"),
                     Border = BoxBorder.Square
                 };
-                AnsiConsole.Render(panelCo1);
+                AnsiConsole.Render(panelCo1); //cuadro de controles
 
-                var wall = Emoji.Known.BlueSquare;
+                //Visual del laberinto:
+                var wall = Emoji.Known.BlueSquare; 
                 var path = Emoji.Known.BlackCircle;
                 var trap = Emoji.Known.Cyclone;
                 var obstacle = Emoji.Known.ChequeredFlag;
@@ -115,7 +117,7 @@ internal class Program
                     Header = new PanelHeader("[bold white]Game Objects[/]"),
                     Border = BoxBorder.Square
                 };
-                AnsiConsole.Render(panelCo5);
+                AnsiConsole.Render(panelCo5); //cuadro de visual
 
                 var panelCo2 = new Panel(new Markup("[turquoise4]Generate Random Trap:[/] A trap is generated randomly at some valid position.\n"
                     + "[turquoise4]Generate Random Obstacle:[/] An obstacle is generated randomly at some valid position.\n"
@@ -129,7 +131,7 @@ internal class Program
                     Header = new PanelHeader("[bold white]Skills tree:[/]"),
                     Border = BoxBorder.Square
                 };
-                AnsiConsole.Render(panelCo2);
+                AnsiConsole.Render(panelCo2); //cuadro de habilidades
 
                 var panelCo3 = new Panel(new Markup("[turquoise4]Teleport Trap:[/] The victim is teleported to its initial position.\n"
                     + "[turquoise4]Rooted Trap:[/] The victim remains rooted to the place during three turns.\n"
@@ -139,7 +141,7 @@ internal class Program
                     Header = new PanelHeader("[bold white]Traps:[/]"),
                     Border = BoxBorder.Square
                 };
-                AnsiConsole.Render(panelCo3);
+                AnsiConsole.Render(panelCo3); //cuadro de trampas
 
                 var panelCo4 = new Panel(new Markup("Each player starts at a random position, with the champion they chose and a random skill.\n"
                     + "The HoneyFruit counter must be filled with three fruits for the victory condition to be met.\n"
@@ -152,32 +154,32 @@ internal class Program
                     Header = new PanelHeader("[bold white]Game mission and specifications:[/]"),
                     Border = BoxBorder.Square
                 };
-                AnsiConsole.Render(panelCo4);
+                AnsiConsole.Render(panelCo4); //cuadro de lógica del juego
 
                 Console.ReadLine();
-                running = false;
+                running = false; //se termina la ejecución del while
             }
             if (firstPage == "Exit")
             { 
-                Console.Clear(); 
-                running = false;
+                Console.Clear();
+                running = false; //se termina la ejecución del while
             }
 
 
 
-            if (gameRunning)
+            if (gameRunning) //si se eligen los personajes, inicia el juego
             {
-                List<int> Skills = new List<int>() { 0, 1, 2, 3, 4, 5 };
+                List<int> Skills = new List<int>() { 0, 1, 2, 3, 4, 5 }; //lista para determinar la habilidad de cada campeón
 
-                int randomIndexD = random.Next(Skills.Count);
-                string mainSkillD = GetMainSkill(Skills[randomIndexD]);
+                int randomIndexD = random.Next(Skills.Count); //random para elegir hab. de demacia
+                string mainSkillD = GetMainSkill(Skills[randomIndexD]); // se llama al string de hab. para asignar un valor
 
-                Skills.RemoveAt(randomIndexD);     //Para evitar la misma habilidad       
+                Skills.RemoveAt(randomIndexD);     //para evitar la misma habilidad       
 
-                int randomIndexN = random.Next(Skills.Count);
+                int randomIndexN = random.Next(Skills.Count); //idem. para noxus
                 string mainSkillN = GetMainSkill(Skills[randomIndexN]);
 
-                string GetMainSkill(int skillIndex)
+                string GetMainSkill(int skillIndex) //selección de string para habilidad principal en dependencia del int
                 {
                     switch (skillIndex)
                     {
@@ -199,34 +201,34 @@ internal class Program
 
                 }
 
-                demaciaPosition = Maze.getDemaciaPosition();
+                demaciaPosition = Maze.getDemaciaPosition(); //se busca la posición inicial del campeon al inicializarse el laberinto
                 noxusPosition = Maze.getNoxusPosition();
-                demaciaChampion = new ChampionClass(demaciaChampionName, mainSkillD, demaciaPosition);
+                demaciaChampion = new ChampionClass(demaciaChampionName, mainSkillD, demaciaPosition); //se inicializa cada campeón con su nombre, hab. principal y posición inicial
                 noxusChampion = new ChampionClass(noxusChampionName, mainSkillN , noxusPosition);
                 
-                int speedSN = 0;
+                int speedSN = 0; //contador para mantener ritmo 3->2->1 en la velocidad de cada campeón por turno
                 int speedSD = 0;
 
-                int RootCooldownD = 0;
+                int RootCooldownD = 0; //contador para duración del stun por efecto trampa o habilidad enemiga
                 int RootCooldownN = 0;
 
-                int secondaryCooldownD = 0;
+                int secondaryCooldownD = 0; //contador para enfriamiento de la hab. secundaria
                 int secondaryCooldownN = 0;
 
-                int mainSkillCooldownD = 0;
+                int mainSkillCooldownD = 0; //contador para enfriamiento de la hab. principal
                 int mainSkillCooldownN = 0;
 
-                int HoneyFruitsD = 0;
+                int HoneyFruitsD = 0; //contador para la cantidad de frutas en posesión
                 int HoneyFruitsN = 0;
 
-                List<int> traps = new List<int>() { 0, 1, 2, 3 };
+                List<int> traps = new List<int>() { 0, 1, 2, 3 }; //lista para selección de trampas
                 
-                gameReallyRunning = true;
+                gameReallyRunning = true; //iniciar la impresión de laberinto y juego [fr]
                 
-                while (gameReallyRunning)
+                while (gameReallyRunning) //empieza juego tras inicializar jugadores y laberinto
                 {
 
-                    if (Turn)
+                    if (Turn) //turno de demacia
                     {
                         Console.Clear();
 
@@ -234,9 +236,9 @@ internal class Program
                         {
                             Border = BoxBorder.Square
                         };
-                        AnsiConsole.Render(panelD);
+                        AnsiConsole.Render(panelD); //panel de cantidad de frutas
 
-                        var tableD = new Table();
+                        var tableD = new Table(); //tabla de enfrimientos y contadores
 
                         tableD.AddColumn("Counter");
                         tableD.AddColumn("Value");
@@ -247,96 +249,92 @@ internal class Program
 
                         AnsiConsole.Write(tableD);
 
-                        Maze.PrintMaze();
+                        Maze.PrintMaze(); //imprimir laberinto
 
-                        Console.WriteLine();
+                        Console.WriteLine(); //espacio de una línea [estética]
 
-                        if (RootCooldownD == 0)
+                        if (RootCooldownD == 0) //verificar que no se encuentre bajo efecto stun
                         {
-                            demaciaChampion.Cursed = false;
+                            demaciaChampion.Cursed = false; //la maldición stun de trampa se elimina
                         }
                         else
                         {
-                            demaciaChampion.speed = 0;
+                            demaciaChampion.speed = 0; //la maldición stun de trampa se mantiene, no es posible mover o ejecutar habilidades
                         }
 
-                        if (secondaryCooldownD == 0)
+                        if (secondaryCooldownD == 0) //verificar si se puede utilizar la hab. secundaria
                         {
                             demaciaChampion.secondarySkillAvailable = true;
                         }
 
-                        if (mainSkillCooldownD == 0)
+                        if (mainSkillCooldownD == 0) //verificar si se puede utilizar hab. principal
                         {
                             demaciaChampion.mainSkillAvailable = true;
                         }
 
-                        demaciaChampion.positionIndex = Maze.demaciaPosition;
+                        demaciaChampion.positionIndex = Maze.demaciaPosition; //verificar posición actual del campeón
 
-                        
+                        demaciaChampion.PrintInfo(); //imprimir status del campeón actualizado, método en ChampionClass
 
-                        demaciaChampion.PrintInfo();
-
-                        
-
-                        if (HoneyFruitsD == 3)
+                        if (HoneyFruitsD == 3) //si se cumple la condición de victoria, salir del ciclo y activar victoria de demacia
                         {
                             gameReallyRunning = false;
                             demaciaWin = true;
                         }
 
-                        ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-                        if (keyInfo.Key != ConsoleKey.Enter && demaciaChampion.speed != 0)
+                        ConsoleKeyInfo keyInfo = Console.ReadKey(true); //leer tecla
+                        if (keyInfo.Key != ConsoleKey.Enter && demaciaChampion.speed != 0) //se ejecuta solo si no se presiona enter o si existe disponibilidad de velocidad
                         {
-                            switch(keyInfo.Key)
+                            switch(keyInfo.Key) 
                             {
-                                case ConsoleKey.UpArrow:
+                                case ConsoleKey.UpArrow: 
                                     Console.Clear();
-                                    Maze.MoveDemaciaChampion(ConsoleKey.UpArrow);  
-                                    demaciaChampion.positionIndex = Maze.demaciaPosition;
-                                    if (Maze.isValid)  demaciaChampion.speed--;
-                                    if (Maze.trap)
+                                    Maze.MoveDemaciaChampion(ConsoleKey.UpArrow); //ejecuta el método de mov. para demacia en MazeGenerator
+                                    demaciaChampion.positionIndex = Maze.demaciaPosition; //actualiza la nueva posición
+                                    if (Maze.isValid)  demaciaChampion.speed--; //si el mov. fue válido, eliminar un punto de velocidad
+                                    if (Maze.trap) //si se activa una trampa
                                     {
-                                        int randomIndex = random.Next(traps.Count);
-                                        if (traps[randomIndex] == 0)
+                                        int randomIndex = random.Next(traps.Count); //random para decidir efecto de la trampa
+                                        if (traps[randomIndex] == 0) //trampa de teletransportar a posición inicial
                                         {
-                                            Maze.TeleportTrapD();
-                                            demaciaChampion.positionIndex = Maze.demaciaPosition;
-                                            demaciaChampion.speed = 0;
-                                            Maze.trap = false;
+                                            Maze.TeleportTrapD(); //método en MazeGenerator
+                                            demaciaChampion.positionIndex = Maze.demaciaPosition; //actualizar posición
+                                            demaciaChampion.speed = 0; //al activar trampas, la velocidad se pierde por el resto del turno
+                                            Maze.trap = false; //se regresa la condición trampa a false para garantizar que se vuelva a activar con otras trampas
                                         }
-                                        else if (traps[randomIndex] == 1)
+                                        else if (traps[randomIndex] == 1) //trampa de stun 
                                         {
-                                            RootCooldownD = 3;
-                                            demaciaChampion.speed = 0;
+                                            RootCooldownD = 3; //contador de stuneo por tres turnos
+                                            demaciaChampion.speed = 0; 
                                             Maze.trap = false;
-                                            demaciaChampion.Cursed = true;
+                                            demaciaChampion.Cursed = true; //efecto maldición
                                         }
-                                        else if (traps[randomIndex] == 2)
+                                        else if (traps[randomIndex] == 2) //trampa de perder fruta 
                                         {
                                             demaciaChampion.speed = 0;
                                             Maze.trap = false;
                                             HoneyFruitsD--;
-                                            Maze.GenerateHoneyFruits();
+                                            Maze.GenerateHoneyFruits(); //al perder una fruta, esta se genera aleatoriamente en una casilla disponible del laberinto
                                         }
-                                        else if ((traps[randomIndex] == 3))
+                                        else if ((traps[randomIndex] == 3)) //trampa de bloqueo de habilidades por dos turnos
                                         {
                                             demaciaChampion.speed = 0;
                                             Maze.trap = false;
-                                            demaciaChampion.mainSkillAvailable = false;
-                                            mainSkillCooldownD = 2;
-                                            demaciaChampion.secondarySkillAvailable = false;
+                                            demaciaChampion.mainSkillAvailable = false; //hab. principal bloqueada 
+                                            mainSkillCooldownD = 2; //contadores en 2 turnos
+                                            demaciaChampion.secondarySkillAvailable = false; //hab. secundaria bloqueada
                                             secondaryCooldownD = 2;
                                         }
                                     }
-                                    if (Maze.honeyFruit)
+                                    if (Maze.honeyFruit) //si la casilla poseía una fruta, se adiciona al contador del campeón
                                     {
                                         HoneyFruitsD++;
-                                        Maze.honeyFruit = false;
+                                        Maze.honeyFruit = false; //se elimina la fruta de la casilla
                                     }
                                     break;
                                 case ConsoleKey.DownArrow:
                                     Console.Clear();
-                                    Maze.MoveDemaciaChampion(ConsoleKey.DownArrow);
+                                    Maze.MoveDemaciaChampion(ConsoleKey.DownArrow); //Idem.
                                     demaciaChampion.positionIndex = Maze.demaciaPosition;
                                     if (Maze.isValid) demaciaChampion.speed--;
                                     if (Maze.trap)
@@ -381,7 +379,7 @@ internal class Program
                                     break;
                                 case ConsoleKey.LeftArrow:
                                     Console.Clear();
-                                    Maze.MoveDemaciaChampion(ConsoleKey.LeftArrow);
+                                    Maze.MoveDemaciaChampion(ConsoleKey.LeftArrow); //Idem.
                                     demaciaChampion.positionIndex = Maze.demaciaPosition;
                                     if (Maze.isValid) demaciaChampion.speed--;
                                     if (Maze.trap)
@@ -426,7 +424,7 @@ internal class Program
                                     break;
                                 case ConsoleKey.RightArrow:
                                     Console.Clear();
-                                    Maze.MoveDemaciaChampion(ConsoleKey.RightArrow);
+                                    Maze.MoveDemaciaChampion(ConsoleKey.RightArrow); //Idem.
                                     demaciaChampion.positionIndex = Maze.demaciaPosition;
                                     if (Maze.isValid) demaciaChampion.speed--;
                                     if (Maze.trap)
@@ -471,65 +469,65 @@ internal class Program
                                     break;
                                 case ConsoleKey.O:                          
                                     Console.Clear();
-                                    if (demaciaChampion.secondarySkillAvailable) Maze.RemoveObstacleD();
-                                    if (Maze.obstacle)
+                                    if (demaciaChampion.secondarySkillAvailable) Maze.RemoveObstacleD(); //hab. de remover obstáculo contiguo en MazeGenerator, se usa si está disponible
+                                    if (Maze.obstacle) //si existía un obstáculo:
                                     {
-                                        demaciaChampion.secondarySkillAvailable = false;
+                                        demaciaChampion.secondarySkillAvailable = false; //se activa el enfriamiento de la hab. secundaria
                                         secondaryCooldownD = 3;
-                                        Maze.obstacle = false;
-                                        demaciaChampion.speed--;
+                                        Maze.obstacle = false; //se reestablece el parámetro de obstáculo para futuro uso
+                                        demaciaChampion.speed--; //la hab. consume un punto de velocidad del turno actual
                                     }
                                     break;
                                 case ConsoleKey.P:
                                     Console.Clear();
-                                    if (demaciaChampion.mainSkillAvailable)
+                                    if (demaciaChampion.mainSkillAvailable) //si está disponible, se ejecuta la habilidad principal del campeón
                                     {
-                                        switch (mainSkillD)
+                                        switch (mainSkillD) //busca el valor de la hab. principal asignada anteriormente
                                         {
-                                            case "Generate Random Trap":
-                                                Maze.GenerateTrap();
+                                            case "Generate Random Trap": //generar trampa en lugar aleatorio disponible 
+                                                Maze.GenerateTrap(); //método en MazeGenerator
                                                 break;
-                                            case "Generate Random Obstacle":
-                                                Maze.GenerateObstacle();
+                                            case "Generate Random Obstacle": //generar obstáculo en lugar aleatorio disponible
+                                                Maze.GenerateObstacle(); //método en MazeGenerator
                                                 break;
-                                            case "Teleport Enemy To Random Address":
-                                                Maze.TeleportEnemy("Noxus");
-                                                noxusChampion.positionIndex = Maze.noxusPosition;
+                                            case "Teleport Enemy To Random Address": //envía al enemigo a una casilla aleatoria disponible
+                                                Maze.TeleportEnemy("Noxus"); //método de teletransporte de enemigo (noxus) en MazeGenerator 
+                                                noxusChampion.positionIndex = Maze.noxusPosition; //actualizar posición de noxus
                                                 break;
-                                            case "Teleport Oneself To Random Address":
-                                                Maze.TeleportSelf("Demacia");
-                                                demaciaChampion.positionIndex = Maze.demaciaPosition;
+                                            case "Teleport Oneself To Random Address": //envía al propio campeón a una casilla aleatoria disponible
+                                                Maze.TeleportSelf("Demacia"); //método de teletransporte propio (demacia) en MazeGenerator
+                                                demaciaChampion.positionIndex = Maze.demaciaPosition; //actualizar posición de Demacia
                                                 break;
-                                            case "Root Enemy":
+                                            case "Root Enemy": //stun al enemigo por dos turnos
                                                 RootCooldownN = 2;
                                                 break;
-                                            case "Steal Speed":
+                                            case "Steal Speed": //roba velocidad del enemigo para el próximo turno (1 punto para el enemigo y 3 puntos propios)
                                                 speedSN = 2;
-                                                noxusChampion.SpeedCooldown(speedSN);
+                                                noxusChampion.SpeedCooldown(speedSN); //se actualiza la vel. enemiga
                                                 speedSD = 2;
                                                 break;
                                         }
-                                        mainSkillCooldownD = 3;
-                                        demaciaChampion.mainSkillAvailable = false;
-                                        demaciaChampion.speed--;
+                                        mainSkillCooldownD = 3; //enfriamiento de la hab. principal por tres turnos
+                                        demaciaChampion.mainSkillAvailable = false; //hab. principal no disponible
+                                        demaciaChampion.speed--; //la hab. cuesta un punto de velocidad
                                     }
                                 break;
                                     
                             }   
                         }
-                        else 
+                        else //si no existen puntos de velocidad o si se presiona enter, se ejecuta el else 
                         {
-                            speedSD++;
-                            demaciaChampion.SpeedCooldown(speedSD);
-                            if (RootCooldownD != 0) RootCooldownD--;
+                            speedSD++; 
+                            demaciaChampion.SpeedCooldown(speedSD); //se calcula la velocidad para el próximo turno, método en ChampionClass
+                            if (RootCooldownD != 0) RootCooldownD--; //se disminuye cada enfriamiento (si existe) a velocidad de un punto por turno
                             if (secondaryCooldownD != 0) secondaryCooldownD--;
                             if (mainSkillCooldownD != 0) mainSkillCooldownD--;
-                            Turn = false;
+                            Turn = false; //finaliza turno de demacia
                         }
                     }
 
                         
-                    else if (!Turn)
+                    else if (!Turn) //turno de noxus
                     {
                         Console.Clear();
 
@@ -539,7 +537,7 @@ internal class Program
                         };
                         AnsiConsole.Render(panelN);
 
-                        var tableN = new Table();
+                        var tableN = new Table(); //Idem
 
                         tableN.AddColumn("Counter");
                         tableN.AddColumn("Value");
@@ -589,38 +587,38 @@ internal class Program
                         ConsoleKeyInfo keyInfo = Console.ReadKey(true);
                         if (keyInfo.Key != ConsoleKey.Enter && noxusChampion.speed != 0)
                         {
-                            switch (keyInfo.Key)
+                            switch (keyInfo.Key) //Idem.
                             {
                                 case ConsoleKey.UpArrow:
                                     Console.Clear();
-                                    Maze.MoveNoxusChampion(ConsoleKey.UpArrow);
+                                    Maze.MoveNoxusChampion(ConsoleKey.UpArrow); //Idem. método de MazeGenerator
                                     noxusChampion.positionIndex = Maze.noxusPosition;
                                     if (Maze.isValid) noxusChampion.speed--;
                                     if (Maze.trap)
                                     {
                                         int randomIndex = random.Next(traps.Count);
-                                        if (traps[randomIndex] == 0)
+                                        if (traps[randomIndex] == 0) //trampa de teletransporte
                                         {
-                                            Maze.TeleportTrapN();
+                                            Maze.TeleportTrapN(); //Idem. método de MazeGenerator
                                             noxusChampion.positionIndex = Maze.noxusPosition;
                                             noxusChampion.speed = 0;
                                             Maze.trap = false;
                                         }
-                                        else if (traps[randomIndex] == 1)
+                                        else if (traps[randomIndex] == 1) //trampa de stun
                                         {
                                             RootCooldownN = 3;
                                             noxusChampion.speed = 0;
                                             Maze.trap = false;
                                             noxusChampion.Cursed = true;
                                         }
-                                        else if (traps[randomIndex] == 2)
+                                        else if (traps[randomIndex] == 2) //trampa de perder fruta
                                         {
                                             noxusChampion.speed = 0;
                                             Maze.trap = false;
                                             HoneyFruitsN--;
                                             Maze.GenerateHoneyFruits();
                                         }
-                                        else if ((traps[randomIndex] == 3))
+                                        else if ((traps[randomIndex] == 3)) //trampa de bloquear hab. por dos turnos
                                         {
                                             noxusChampion.speed = 0;
                                             Maze.trap = false;
@@ -773,7 +771,7 @@ internal class Program
                                     break;
                                 case ConsoleKey.O:
                                     Console.Clear();
-                                    if (noxusChampion.secondarySkillAvailable) Maze.RemoveObstacleN();
+                                    if (noxusChampion.secondarySkillAvailable) Maze.RemoveObstacleN(); //Idem. método en MazeGenerator
                                     if (Maze.obstacle)
                                     {
                                         noxusChampion.secondarySkillAvailable = false;
@@ -784,36 +782,36 @@ internal class Program
                                     break;
                                 case ConsoleKey.P:
                                     Console.Clear();
-                                    if (noxusChampion.mainSkillAvailable)
+                                    if (noxusChampion.mainSkillAvailable) //Idem.
                                     {
                                         switch (mainSkillN)
                                         {
-                                            case "Generate Random Trap":
-                                                Maze.GenerateTrap();
+                                            case "Generate Random Trap": //hab. de generar trampa aleatoria
+                                                Maze.GenerateTrap(); //método en MazeGenerator
                                                 break;
-                                            case "Generate Random Obstacle":
-                                                Maze.GenerateObstacle();
+                                            case "Generate Random Obstacle": //hab. de generar obstáculo aleatorio
+                                                Maze.GenerateObstacle(); //método en MazeGenerator
                                                 break;
-                                            case "Teleport Enemy To Random Address":
-                                                Maze.TeleportEnemy("Demacia");
-                                                demaciaChampion.positionIndex = Maze.demaciaPosition;
+                                            case "Teleport Enemy To Random Address": //hab. de teletransporte enemigo aleatorio
+                                                Maze.TeleportEnemy("Demacia"); //método en MazeGenerator
+                                                demaciaChampion.positionIndex = Maze.demaciaPosition; //actualizar posición del enemigo
                                                 break;
-                                            case "Teleport Oneself To Random Address":
-                                                Maze.TeleportSelf("Noxus");
-                                                noxusChampion.positionIndex = Maze.noxusPosition;
+                                            case "Teleport Oneself To Random Address": //hab. de teletransporte propio aleatorio
+                                                Maze.TeleportSelf("Noxus"); //método en MazeGenerator
+                                                noxusChampion.positionIndex = Maze.noxusPosition; //actualizar posición propia
                                                 break;
-                                            case "Root Enemy":
+                                            case "Root Enemy": //hab. de stun
                                                 RootCooldownD = 2;
                                                 break;
-                                            case "Steal Speed":
+                                            case "Steal Speed": //hab. de robar velocidad (1 punto enemigo, 3 puntos propios para el próximo turno)
                                                 speedSD = 2;
-                                                demaciaChampion.SpeedCooldown(speedSD);
+                                                demaciaChampion.SpeedCooldown(speedSD); //método en ChampionClass
                                                 speedSN = 2;
                                                 break;
                                         }
-                                        mainSkillCooldownN = 3;
-                                        noxusChampion.mainSkillAvailable = false;
-                                        noxusChampion.speed--;
+                                        mainSkillCooldownN = 3; //enfriamiento de la hab. principal
+                                        noxusChampion.mainSkillAvailable = false; //hab. principal no disponible
+                                        noxusChampion.speed--; //-1 punto de velocidad
                                     }
                                     break;
                             }
@@ -821,22 +819,22 @@ internal class Program
                         else
                         {
                             speedSN++;
-                            noxusChampion.SpeedCooldown(speedSN);
-                            if (RootCooldownN != 0) RootCooldownN--;
+                            noxusChampion.SpeedCooldown(speedSN); //se calcula la velocidad para el próximo turno, método en ChampionClass
+                            if (RootCooldownN != 0) RootCooldownN--; //enfriamiento de stun y habilidades
                             if (secondaryCooldownN != 0) secondaryCooldownN--;
                             if (mainSkillCooldownN != 0) mainSkillCooldownN--;
-                            Turn = true;
+                            Turn = true; //cambia el turno a demacia
                         }
                     }
                 }
             }
-            gameRunning = false;
+            gameRunning = false; //finalizan todos los ciclos while
             running = false; 
         }
 
         Console.Clear();
 
-        if (demaciaWin)
+        if (demaciaWin) //victoria de demacia: imprime cartel de victoria
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine(@"
@@ -850,7 +848,7 @@ internal class Program
     ");
             Console.ResetColor();
         }
-        else if (noxusWin)
+        else if (noxusWin) //victoria de noxus: imprime cartel de victoria
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(@"
