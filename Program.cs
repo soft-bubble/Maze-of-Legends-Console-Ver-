@@ -9,19 +9,31 @@ using System.Diagnostics;
 using System.IO;
 using System.Collections.Immutable;
 using static System.Net.Mime.MediaTypeNames;
+using NAudio.Wave;
+using System.Threading;
+using System.Collections.Generic;
 
 internal class Program
 {
-    public static MazeGenerator Maze = new MazeGenerator(); //iniciar el laberinto
+    #pragma warning disable
+    public static MazeGenerator Maze; //iniciar el laberinto
     #pragma warning disable //para no obtener la alerta de que gameChampions null
     public static ChampionClass demaciaChampion; //iniciar los campeones sin valores
     public static ChampionClass noxusChampion;
 
     public static Random random = new Random();
 
+    //Para la música:
+    private static WaveOutEvent outputDevice;
+    private static AudioFileReader audioFile;
+    static bool runningMusic = false;
+
     private static void Main(string[] args)
     {
         bool running = true;            //para empezar juego
+
+        runningMusic = running;
+
         bool gameRunning = false;       //para elegir campeones
         bool gameReallyRunning = false; //para jugar
         bool Turn = true;               //para cambiar de turno
@@ -29,10 +41,42 @@ internal class Program
         (int x, int y) noxusPosition;
         string demaciaChampionName = string.Empty;  //nombre a seleccionar de cada campeón
         string noxusChampionName = string.Empty;
+        string PickTier = string.Empty; //dificultad del juego
         bool demaciaWin = false;      //victoria de demacia
         bool noxusWin = false;        //victoria de noxus
 
-        while (running) {
+        while (running) 
+        {
+
+            List<string> playlist = new List<string> //dirección de las canciones para la playlist
+            {
+                "C:\\Eli\\Maze of Legends\\Console Ver\\Maze of Legends\\music\\d4vd_Remember_Me_Intro_from_the_series_Arcane_League_of_Leg.mp3",
+                "C:\\Eli\\Maze of Legends\\Console Ver\\Maze of Legends\\music\\Mike_Shinoda_Heavy_Is_The_Crown_Original_Score_from_the_ser.mp3",
+                "C:\\Eli\\Maze of Legends\\Console Ver\\Maze of Legends\\music\\Arcane_Spin_The_Wheel_from_the_series_Arcane_League_of_Legend.mp3",
+                "C:\\Eli\\Maze of Legends\\Console Ver\\Maze of Legends\\music\\Arcane_这样很好_Isha_s_Song_from_the_series_Arcane_League_of_Le.mp3",
+                "C:\\Eli\\Maze of Legends\\Console Ver\\Maze of Legends\\music\\Ashnikko_Paint_The_Town_Blue_from_the_series_Arcane_League_of.mp3",
+                "C:\\Eli\\Maze of Legends\\Console Ver\\Maze of Legends\\music\\d4vd_Remember_Me_from_the_series_Arcane_League_of_Legends.mp3",
+                "C:\\Eli\\Maze of Legends\\Console Ver\\Maze of Legends\\music\\Djerv_Rebel_Heart_from_the_series_Arcane_League_of_Legends.mp3",
+                "C:\\Eli\\Maze of Legends\\Console Ver\\Maze of Legends\\music\\FEVER_333_Hellfire_from_the_series_Arcane_League_of_Legends.mp3",
+                "C:\\Eli\\Maze of Legends\\Console Ver\\Maze of Legends\\music\\Freya_Ridings_I_Can_t_Hear_It_Now_from_the_series_Arcane_Leag.mp3",
+                "C:\\Eli\\Maze of Legends\\Console Ver\\Maze of Legends\\music\\Imagine Dragons - Enemy with JID (Opening Title Version).mp3",
+                "C:\\Eli\\Maze of Legends\\Console Ver\\Maze of Legends\\music\\King_Princess_Fantastic_from_the_series_Arcane_League_of_Lege.mp3",
+                "C:\\Eli\\Maze of Legends\\Console Ver\\Maze of Legends\\music\\Mako_What_Have_They_Done_To_Us_from_the_series_Arcane_League.mp3",
+                "C:\\Eli\\Maze of Legends\\Console Ver\\Maze of Legends\\music\\Marcus_King_Sucker_from_the_series_Arcane_League_of_Legends.mp3",
+                "C:\\Eli\\Maze of Legends\\Console Ver\\Maze of Legends\\music\\Misha_Mansoor_The_Beast_from_the_series_Arcane_League_of_Lege.mp3",
+                "C:\\Eli\\Maze of Legends\\Console Ver\\Maze of Legends\\music\\Raja_Kumari_Renegade_We_Never_Run_from_the_series_Arcane_Le.mp3",
+                "C:\\Eli\\Maze of Legends\\Console Ver\\Maze of Legends\\music\\Royal_the_Serpent_Wasteland_from_the_series_Arcane_League_o.mp3",
+                "C:\\Eli\\Maze of Legends\\Console Ver\\Maze of Legends\\music\\Sheryl_Lee_Ralph_Blood_Sweat_Tears_from_the_series_Arcane_L.mp3",
+                "C:\\Eli\\Maze of Legends\\Console Ver\\Maze of Legends\\music\\Stray_Kids_Come_Play_from_the_series_Arcane_League_of_Legends.mp3",
+                "C:\\Eli\\Maze of Legends\\Console Ver\\Maze of Legends\\music\\Stromae_Ma_Meilleure_Ennemie_from_the_series_Arcane_League_of.mp3",
+                "C:\\Eli\\Maze of Legends\\Console Ver\\Maze of Legends\\music\\Twenty_One_Pilots_The_Line_from_the_series_Arcane_League_of_L.mp3",
+                "C:\\Eli\\Maze of Legends\\Console Ver\\Maze of Legends\\music\\Woodkid_To_Ashes_and_Blood_from_the_series_Arcane_League_of_L.mp3",
+                "C:\\Eli\\Maze of Legends\\Console Ver\\Maze of Legends\\music\\Zand_Cocktail_Molotov_from_the_series_Arcane_League_of_Legend.mp3"
+            };
+
+            Thread audioThread = new Thread(() => PlayMusic(playlist)); //llamada al método para que se reproduzca música 
+            audioThread.Start(); //comienza la playlist
+
             var firstPage = AnsiConsole.Prompt(new SelectionPrompt<string>()  //primera página a mostrar
             .Title("[turquoise4] Welcome to Maze of Legends![/]")
             .PageSize(4)
@@ -56,10 +100,16 @@ internal class Program
                 "Ambessa", "Swain", "Mordekaiser", "Katarina", "Samira"
                 }));
 
-                gameRunning = true; //el juego inicia 
+                PickTier = AnsiConsole.Prompt(new SelectionPrompt<string>() //se elige la dificultad del juego
+                    .Title("[turquoise4] Select your Tier:[/]")
+                    .PageSize(10)
+                    .AddChoices(new[] {
+                    "Iron", "Bronze", "Silver", "Gold", "Platinum", "Emerald", "Diamond", "Master", "Grandmaster", "CHALLENGER"
+                    }));
 
-                
+                gameRunning = true; //el juego inicia 
             }
+
             if (firstPage == "Credits") //página de los créditos
             {
                 var panelCr = new Panel(new Markup("[bold turquoise4]Thanks to my family[/] for supporting me throughout the whole process (I didn't get to wash many dishes) and for giving me some ideas.\n" +
@@ -74,6 +124,7 @@ internal class Program
                 Console.ReadLine();
                 running = false; //se termina la ejecución del while
             }
+
             if (firstPage == "Controls") //explicación de controles, objetivos y visual 
             {
                 //Visual de las teclas con emojis:
@@ -169,6 +220,42 @@ internal class Program
 
             if (gameRunning) //si se eligen los personajes, inicia el juego
             {
+
+                int SetTier(string PickTier) //para decidir el valor del tamaño según la dificultad
+                {
+                    switch (PickTier)
+                    {
+                        case "Iron":
+                            return 9;
+                        case "Bronze":
+                            return 11;
+                        case "Silver":
+                            return 13;
+                        case "Gold":
+                            return 15;
+                        case "Platinum":
+                            return 17;
+                        case "Emerald":
+                            return 19;
+                        case "Diamond":
+                            return 21;
+                        case "Master":
+                            return 23;
+                        case "Grandmaster":
+                            return 25;
+                        case "CHALLENGER":
+                            return 27;
+                        default:
+                            return 15;
+                    }
+                }
+
+                int SizeOfMaze = SetTier(PickTier); //se asigna el tamaño
+
+                Maze = new MazeGenerator(SizeOfMaze); //se inicializa el laberinto
+
+                Thread.Sleep(1000); //espera un segundo
+
                 List<int> Skills = new List<int>() { 0, 1, 2, 3, 4, 5 }; //lista para determinar la habilidad de cada campeón
 
                 int randomIndexD = random.Next(Skills.Count); //random para elegir hab. de demacia
@@ -829,7 +916,7 @@ internal class Program
                 }
             }
             gameRunning = false; //finalizan todos los ciclos while
-            running = false; 
+            running = false;
         }
 
         Console.Clear();
@@ -847,6 +934,13 @@ internal class Program
     └───────────────────────────────┘
     ");
             Console.ResetColor();
+
+            ConsoleKeyInfo keyInfoEnd = Console.ReadKey(true); //se detiene el juego y la música tras presionar enter
+            if (keyInfoEnd.Key == ConsoleKey.Enter)
+            {
+                runningMusic = running;
+                StopMusic();
+            }
         }
         else if (noxusWin) //victoria de noxus: imprime cartel de victoria
         {
@@ -861,6 +955,63 @@ internal class Program
     └───────────────────────────────┘
     ");
             Console.ResetColor();
+
+            ConsoleKeyInfo keyInfoEnd = Console.ReadKey(true); 
+            if (keyInfoEnd.Key == ConsoleKey.Enter)
+            {
+                runningMusic = running;
+                StopMusic();
+            }
+        }
+
+        else //se detiene la música en cualquier otra salida
+        {
+            runningMusic = running;
+            StopMusic();
+        }
+        
+        
+    }
+
+    private static void PlayMusic(List<string> playlist) //método para reproducir la música
+    {
+        Random random = new Random();
+
+        for (int i = playlist.Count - 1; i > 0; i--) //permite que la playlist sea aleatoria (excepto la intro)
+        {
+            int randomSong = random.Next(1, i + 1);
+
+            string temp = playlist[i];
+            playlist[i] = playlist[randomSong];
+            playlist[randomSong] = temp;
+        }
+
+        foreach (var mp3FilePath in playlist) //reproduce cada canción
+        {
+            using (outputDevice = new WaveOutEvent())
+            using (audioFile = new AudioFileReader(mp3FilePath))
+            {
+                outputDevice.Init(audioFile);
+                outputDevice.Play();
+
+                while (runningMusic && outputDevice.PlaybackState == PlaybackState.Playing)  //espera hasta que la playlist termine o el juego se acabe
+                {
+                    Thread.Sleep(1000); //espera 1 segundo para iniciar
+                }
+
+                if (!runningMusic) // Si el juego se detuvo, salimos del bucle
+                {
+                    break;
+                }
+            }
+        }
+    }
+
+    private static void StopMusic() //detener la música
+    {
+        if (outputDevice != null)
+        {
+            outputDevice.Stop();
         }
     }
 }

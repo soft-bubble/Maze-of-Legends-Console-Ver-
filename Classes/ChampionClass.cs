@@ -30,18 +30,6 @@ namespace Maze_of_Legends.Classes
             this.positionIndex = positionIndex;
         }
 
-        public override string ToString()
-        {
-            return $"Name: {name}\n" +
-                   $"Main Skill: {mainSkill}\n" +
-                   $"Main Skill Available: {mainSkillAvailable}\n" +
-                   $"Secondary Skill Available: {secondarySkillAvailable}\n" +
-                   $"Speed: {speed}\n" +  
-                   $"Cursed: {Cursed}\n" +
-                   $"Position: {positionIndex}";
-        }
-
-
         public void PrintInfo()
         {
             var table = new Table();

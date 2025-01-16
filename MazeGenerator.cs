@@ -10,7 +10,7 @@ namespace Maze_of_Legends
 {
     internal class MazeGenerator
     {
-        public int Size = 15;
+        public int Size;
 
         public (int x, int y) demaciaPosition;
         public (int x, int y) noxusPosition;
@@ -28,8 +28,9 @@ namespace Maze_of_Legends
 
         private Random random = new Random();
 
-        public MazeGenerator() //el generador vv
+        public MazeGenerator(int Size) //el generador vv
         {
+            this.Size = Size;
             SquaresGeneration();
             GenerateStructure(1, 1);
             ChangeType();
@@ -101,14 +102,54 @@ namespace Maze_of_Legends
         {
             var pathCells = Squares.Where(square => square.Type == SquareClass.CellType.Path).ToList();
 
-            for (int i = 0; i < 4; i++)
+            int traps = 4;
+            int obstacles = 3;
+
+            switch(Size)
+            {
+                case 9:
+                    break;
+                case 11:
+                    break;
+                case 13:
+                    break;
+                case 15:
+                    break;
+                case 17:
+                    traps += 4;
+                    obstacles += 3;
+                break;
+                case 19:
+                    traps += 8;
+                    obstacles += 6;
+                break;
+                case 21:
+                    traps += 12;
+                    obstacles += 9;
+                break;
+                case 23:
+                    traps += 16;
+                    obstacles += 12;
+                break;
+                case 25:
+                    traps += 20;
+                    obstacles += 15;
+                break;
+                case 27:
+                    traps += 24;
+                    obstacles += 18;
+                break;
+
+            }
+
+            for (int i = 0; i < traps; i++)
             {
                 int randomIndex = random.Next(pathCells.Count);
                 pathCells[randomIndex].Type = SquareClass.CellType.Trap;
                 pathCells.RemoveAt(randomIndex);
             }
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < obstacles; i++)
             {
                 int randomIndex = random.Next(pathCells.Count);
                 pathCells[randomIndex].Type = SquareClass.CellType.Obstacle;
