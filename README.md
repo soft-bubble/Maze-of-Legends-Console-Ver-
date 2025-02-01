@@ -3,7 +3,7 @@
 ## Descripción
 **Maze of Legends** es un emocionante juego de laberinto diseñado para dos jugadores, donde la estrategia y la habilidad son clave para la victoria. 
 En **Maze of Legends**, los jugadores se sumergen en un desafiante laberinto en el que deben recolectar **tres frutas** antes que su oponente. Cada jugador elige un campeón de las icónicas regiones de **Demacia** y **Noxus**, enfrentándose a enemigos naturales y utilizando sus habilidades para superar los obstáculos del laberinto.
-El objetivo es simple: recolectar tres frutas antes que tu oponente mientras navegas por un laberinto lleno de desafíos. Usa tus habilidades sabiamente para desactivar trampas y superar a tus enemigos en esta intensa carrera por la victoria.
+Usa tus habilidades sabiamente para desactivar trampas y superar a tus enemigos en esta intensa carrera por la victoria.
 
 ## Instalación
 
