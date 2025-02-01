@@ -87,7 +87,7 @@ Imagen de referencia:
 4. **Panel de Información del Campeón**:
    - Ubicado debajo del laberinto, este panel contiene información crucial sobre el estado del campeón en turno:
      - **Nombre del Campeón**: Indica qué personaje está activo.
-     - **Habilidad Principal**: Muestra la disponibilidad de la habilidad principal.
+     - **Habilidad Principal**: Muestra el nombre y la disponibilidad de la habilidad principal.
      - **Habilidad Secundaria**: Indica la disponibilidad de la habilidad secundaria.
      - **Velocidad**: Muestra la velocidad disponible durante el turno.
      - **Estado de Trampa**: Indica si el campeón está bajo el efecto de la trampa **Root** (Cursed).
