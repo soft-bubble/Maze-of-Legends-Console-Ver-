@@ -187,6 +187,7 @@ internal class Program
                 var panelCo3 = new Panel(new Markup("[turquoise4]Teleport Trap:[/] The victim is teleported to its initial position.\n"
                     + "[turquoise4]Rooted Trap:[/] The victim remains rooted to the place during three turns.\n"
                     + "[turquoise4]Lose a fruit:[/] The victim loses a fruit, which falls somewhere in the labyrinth. If the victim has no fruit, they receive a negative point to refill.\n"
+                    + "[turquoise4]Block skills:[/] The victim skills' cooldown set to two."
                      ))
                 {
                     Header = new PanelHeader("[bold white]Traps:[/]"),
@@ -992,7 +993,7 @@ internal class Program
             using (audioFile = new AudioFileReader(mp3FilePath))
             {
                 outputDevice.Init(audioFile);
-                outputDevice.Play();
+                outputDevice.Play();    
 
                 while (runningMusic && outputDevice.PlaybackState == PlaybackState.Playing)  //espera hasta que la playlist termine o el juego se acabe
                 {
