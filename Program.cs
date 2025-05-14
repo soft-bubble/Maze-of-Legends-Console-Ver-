@@ -90,7 +90,7 @@ internal class Program
                 .Title("[turquoise4] Select your Demacia Champion:[/]")
                 .PageSize(5)
                 .AddChoices(new[] {
-                "Garen", "Lux", "Sona", "Vayne", "Shyvanna"
+                "Garen", "Lux", "Sona", "Vayne", "Shyvanna", "Kevin"
                 }));
 
                 noxusChampionName = AnsiConsole.Prompt(new SelectionPrompt<string>() //segundo jugador elige personaje
